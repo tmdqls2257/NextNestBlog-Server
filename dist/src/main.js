@@ -17,18 +17,18 @@ class Application {
         this.server = server;
         if (!process.env.SECRET_KEY)
             this.logger.error('Set "SECRET" env');
-        this.DEV_MODE = process.env.NODE_ENV === 'production' ? false : true;
-        this.PORT = process.env.PORT || '8080';
-        this.ADMIN_USER = process.env.ADMIN_USER || 'amamov';
-        this.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '1205';
+        this.DEV_MODE = process.env.NODE_ENV === "production" ? false : true;
+        this.PORT = process.env.PORT || "8080";
+        this.ADMIN_USER = process.env.ADMIN_USER || "amamov";
+        this.ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "1205";
     }
     multer() {
-        this.server.useStaticAssets(path.join(__dirname, './common', 'uploads'), {
-            prefix: '/media',
+        this.server.useStaticAssets(path.join(__dirname, "./common", "uploads"), {
+            prefix: "/media",
         });
     }
     setUpBasicAuth() {
-        this.server.use(['/docs', '/docs-json'], expressBasicAuth({
+        this.server.use(["/docs", "/docs-json"], expressBasicAuth({
             challenge: true,
             users: {
                 [this.ADMIN_USER]: this.ADMIN_PASSWORD,
@@ -36,19 +36,19 @@ class Application {
         }));
     }
     setUpOpenAPIMidleware() {
-        swagger_1.SwaggerModule.setup('docs', this.server, swagger_1.SwaggerModule.createDocument(this.server, new swagger_1.DocumentBuilder()
-            .setTitle('Yoon Sang Seok - API')
-            .setDescription('TypeORM In Nest')
-            .setVersion('0.0.1')
+        swagger_1.SwaggerModule.setup("docs", this.server, swagger_1.SwaggerModule.createDocument(this.server, new swagger_1.DocumentBuilder()
+            .setTitle("Yoon Sang Seok - API")
+            .setDescription("TypeORM In Nest")
+            .setVersion("0.0.1")
             .build()));
     }
     async setUpGlobalMiddleware() {
         this.server.enableCors({
-            origin: process.env.CORS_PORT,
+            origin: process.env.CORS_PORT || "*",
             credentials: true,
         });
         this.server.use(expressSession({
-            secret: 'SECRET',
+            secret: "SECRET",
             resave: true,
             saveUninitialized: true,
         }));
@@ -87,6 +87,6 @@ async function init() {
     app.startLog();
 }
 init().catch((error) => {
-    new common_1.Logger('init').error(error);
+    new common_1.Logger("init").error(error);
 });
 //# sourceMappingURL=main.js.map

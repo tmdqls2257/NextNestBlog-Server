@@ -1,7 +1,7 @@
 /// <reference types="multer" />
-import { BlogsService } from './blogs.service';
-import { BlogDTO } from './dto/blog.dto';
-import { AwsService } from './aws.service';
+import { BlogsService } from "./blogs.service";
+import { BlogDTO } from "./dto/blog.dto";
+import { AwsService } from "./aws.service";
 export declare class BlogsController {
     private blogsService;
     private awsService;

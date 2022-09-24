@@ -14,30 +14,34 @@ const path = require("path");
 const AWS = require("aws-sdk");
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
+const sharp = require("sharp");
 let AwsService = class AwsService {
     constructor(configService) {
         this.configService = configService;
         this.awsS3 = new AWS.S3({
-            accessKeyId: this.configService.get('AWS_S3_ACCESS_KEY'),
-            secretAccessKey: this.configService.get('AWS_S3_SECRET_KEY'),
-            region: this.configService.get('AWS_S3_REGION'),
+            accessKeyId: this.configService.get("AWS_S3_ACCESS_KEY"),
+            secretAccessKey: this.configService.get("AWS_S3_SECRET_KEY"),
+            region: this.configService.get("AWS_S3_REGION"),
         });
-        this.S3_BUCKET_NAME = this.configService.get('AWS_S3_BUCKET_NAME');
+        this.S3_BUCKET_NAME = this.configService.get("AWS_S3_BUCKET_NAME");
     }
     async uploadFileToS3(folder, file) {
         try {
-            const key = `${folder}/${Date.now()}_${path.basename(file.originalname)}`.replace(/ /g, '');
-            console.log(file);
+            const convertImage = await sharp(file.buffer).webp();
+            const convertImageBuffer = await convertImage.toBuffer();
+            const fileName = file.originalname.split(".")[0];
+            console.log(convertImage);
+            console.log(convertImageBuffer);
+            const key = `${folder}/${Date.now()}_${path.basename(fileName)}.webp`.replace(/ /g, "");
             const s3Object = await this.awsS3
                 .putObject({
                 Bucket: this.S3_BUCKET_NAME,
                 Key: key,
-                Body: file.buffer,
-                ACL: 'public-read',
-                ContentType: file.mimetype,
+                Body: convertImageBuffer,
+                ACL: "public-read",
+                ContentType: "image/webp",
             })
                 .promise();
-            console.log(key);
             return { key, s3Object, contentType: file.mimetype };
         }
         catch (error) {

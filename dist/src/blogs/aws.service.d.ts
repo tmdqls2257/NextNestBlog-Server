@@ -1,7 +1,7 @@
 /// <reference types="multer" />
-import * as AWS from 'aws-sdk';
-import { ConfigService } from '@nestjs/config';
-import { PromiseResult } from 'aws-sdk/lib/request';
+import * as AWS from "aws-sdk";
+import { ConfigService } from "@nestjs/config";
+import { PromiseResult } from "aws-sdk/lib/request";
 export declare class AwsService {
     private readonly configService;
     private readonly awsS3;
