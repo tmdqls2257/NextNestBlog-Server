@@ -20,45 +20,54 @@ let BlogEntity = class BlogEntity extends common_entity_1.CommonEntity {
 };
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'test@test.com',
-        description: 'email',
+        example: "test@test.com",
+        description: "email",
         required: true,
     }),
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: false }),
     __metadata("design:type", String)
 ], BlogEntity.prototype, "title", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'html',
-        description: 'description',
+        example: "html",
+        description: "description",
         required: false,
     }),
-    (0, typeorm_1.Column)({ type: 'varchar', nullable: false, default: '' }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: false, default: "" }),
     __metadata("design:type", String)
 ], BlogEntity.prototype, "description", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 'test content입니다.',
-        description: 'contents',
+        example: "test content입니다.",
+        description: "contents",
         required: true,
     }),
-    (0, typeorm_1.Column)({ type: 'text', nullable: true, default: '' }),
+    (0, typeorm_1.Column)({ type: "text", nullable: true, default: "" }),
     __metadata("design:type", String)
 ], BlogEntity.prototype, "contents", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        example: "imageUrl.",
+        description: "imageUrl",
+        required: false,
+    }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: false, default: "" }),
+    __metadata("design:type", String)
+], BlogEntity.prototype, "imageUrl", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => users_entity_1.UserEntity, (author) => author.blogs, {
-        onDelete: 'CASCADE',
+        onDelete: "CASCADE",
     }),
     (0, typeorm_1.JoinColumn)([
         {
-            name: 'author_id',
-            referencedColumnName: 'id',
+            name: "author_id",
+            referencedColumnName: "id",
         },
     ]),
     __metadata("design:type", users_entity_1.UserEntity)
 ], BlogEntity.prototype, "author", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: 'int', nullable: true, default: 0 }),
+    (0, typeorm_1.Column)({ type: "int", nullable: true, default: 0 }),
     __metadata("design:type", Number)
 ], BlogEntity.prototype, "likeCount", void 0);
 __decorate([
@@ -66,14 +75,14 @@ __decorate([
         cascade: true,
     }),
     (0, typeorm_1.JoinTable)({
-        name: 'BLOG_TAG',
+        name: "BLOG_TAG",
         joinColumn: {
-            name: 'blog_id',
-            referencedColumnName: 'id',
+            name: "blog_id",
+            referencedColumnName: "id",
         },
         inverseJoinColumn: {
-            name: 'tag_id',
-            referencedColumnName: 'id',
+            name: "tag_id",
+            referencedColumnName: "id",
         },
     }),
     __metadata("design:type", tags_entity_1.TagEntity)
@@ -86,7 +95,7 @@ __decorate([
 ], BlogEntity.prototype, "visitors", void 0);
 BlogEntity = __decorate([
     (0, typeorm_1.Entity)({
-        name: 'BLOG',
+        name: "BLOG",
     })
 ], BlogEntity);
 exports.BlogEntity = BlogEntity;
