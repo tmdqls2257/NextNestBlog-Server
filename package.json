@@ -11,6 +11,7 @@
     "migration:run": "yarn typeorm -d ormconfig.ts migration:run ",
     "migration:revert": "yarn typeorm -d ormconfig.ts migration:revert ",
     "migration:log": "yarn typeorm schema:log -d ormconfig.ts ",
+    "migration:drop": "yarn typeorm schema:drop -d ormconfig.ts ",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
