@@ -39,15 +39,12 @@ export class BlogsService {
   async blogPost(BlogEntity: BlogDTO) {
     const { title, contents, description, imageUrl, tags } = BlogEntity;
     const repositoryTags = [];
-    console.log(tags);
 
     tags.map(async (name) => {
       const repositoryTag = await this.TagEntityRepository.save({ name });
-      console.log(repositoryTag);
 
       await repositoryTags.push(repositoryTag);
     });
-    console.log(repositoryTags);
 
     const newBlog = await this.BlogEntityRepository.save({
       title,
