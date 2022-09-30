@@ -81,7 +81,7 @@ export class BlogEntity extends CommonEntity {
       referencedColumnName: "id",
     },
   })
-  tags: TagEntity;
+  tags: string[];
 
   @OneToMany(() => VisitorEntity, (visitor: VisitorEntity) => visitor.blog, {
     cascade: true,

@@ -1,19 +1,24 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { BlogEntity } from 'src/blogs/blogs.entity';
-import { DataSource, Repository } from 'typeorm';
-import { BlogDTO } from './dto/blog.dto';
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { BlogEntity } from "src/blogs/blogs.entity";
+import { TagEntity } from "src/tags/tags.entity";
+import { Repository } from "typeorm";
+import { BlogDTO } from "./dto/blog.dto";
 
 @Injectable()
 export class BlogsService {
   constructor(
     @InjectRepository(BlogEntity)
     private readonly BlogEntityRepository: Repository<BlogEntity>,
+    @InjectRepository(TagEntity)
+    private readonly TagEntityRepository: Repository<TagEntity>
   ) {}
 
   async getAllBlogs() {
     try {
       const blogs = await this.BlogEntityRepository.find();
+      console.log(blogs);
+
       return blogs;
     } catch (error) {
       throw new BadRequestException(error.message);
@@ -32,12 +37,24 @@ export class BlogsService {
   }
 
   async blogPost(BlogEntity: BlogDTO) {
-    const { title, contents, description } = BlogEntity;
+    const { title, contents, description, imageUrl, tags } = BlogEntity;
+    const repositoryTags = [];
+    console.log(tags);
+
+    tags.map(async (name) => {
+      const repositoryTag = await this.TagEntityRepository.save({ name });
+      console.log(repositoryTag);
+
+      await repositoryTags.push(repositoryTag);
+    });
+    console.log(repositoryTags);
 
     const newBlog = await this.BlogEntityRepository.save({
       title,
       contents,
       description,
+      imageUrl,
+      tags: repositoryTags,
     });
     return newBlog;
   }
@@ -70,5 +87,17 @@ export class BlogsService {
   async deleteBlog(id: string) {
     const deleteBlog = await this.BlogEntityRepository.delete(id);
     return deleteBlog;
+  }
+
+  async getTags(id) {
+    try {
+      const blog = await this.BlogEntityRepository.findOne({
+        where: { id },
+      });
+      console.log(blog);
+      return blog.tags;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

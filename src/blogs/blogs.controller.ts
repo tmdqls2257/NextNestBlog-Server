@@ -87,4 +87,10 @@ export class BlogsController {
     const res = await this.awsService.uploadFileToS3("blog", file);
     return await this.awsService.getAwsS3FileUrl(res.key);
   }
+
+  @ApiOperation({ summary: "한 post의 tag를 가져옵니다." })
+  @Get("tags/:id")
+  async getTags(@Param("id") id: string) {
+    return await this.blogsService.getTags(id);
+  }
 }
