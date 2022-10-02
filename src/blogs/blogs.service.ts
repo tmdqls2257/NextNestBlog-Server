@@ -16,7 +16,9 @@ export class BlogsService {
 
   async getAllBlogs() {
     try {
-      const blogs = await this.BlogEntityRepository.find();
+      const blogs = await this.BlogEntityRepository.find({
+        relations: { tags: true },
+      });
       console.log(blogs);
 
       return blogs;
@@ -36,23 +38,32 @@ export class BlogsService {
     }
   }
 
-  async blogPost(BlogEntity: BlogDTO) {
-    const { title, contents, description, imageUrl, tags } = BlogEntity;
-    const repositoryTags = [];
-
-    tags.map(async (name) => {
-      const repositoryTag = await this.TagEntityRepository.save({ name });
-
-      await repositoryTags.push(repositoryTag);
-    });
-
+  async blogPost(BlogEntity: BlogDTO, tags: string[]) {
+    const { title, contents, description, imageUrl } = BlogEntity;
     const newBlog = await this.BlogEntityRepository.save({
       title,
       contents,
       description,
       imageUrl,
-      tags: repositoryTags,
     });
+
+    // if (tags) {
+    //   tags.map(async (name) => {
+    //     await this.TagEntityRepository.findOne({
+    //       where: {
+    //         name,
+    //       },
+    //       relations: {
+    //         blog: true,
+    //       },
+    //     }).then(async (res) => {
+    //       if (!res) {
+    //         await this.TagEntityRepository
+    //       }
+    //     });
+    //   });
+    // }
+
     return newBlog;
   }
 
@@ -86,13 +97,30 @@ export class BlogsService {
     return deleteBlog;
   }
 
-  async getTags(id) {
+  async JoinBlogTags(tagNames: string[], blog: BlogDTO) {
     try {
-      const blog = await this.BlogEntityRepository.findOne({
-        where: { id },
+      const { title } = blog;
+      const foundBlog = await this.BlogEntityRepository.findOne({
+        where: { title },
+        relations: {
+          tags: true,
+        },
       });
-      console.log(blog);
-      return blog.tags;
+      console.log("foundBlog", foundBlog);
+
+      tagNames.map(async (tagName) => {
+        await this.TagEntityRepository.findOne({
+          where: { name: tagName },
+          relations: {
+            blog: true,
+          },
+        }).then(async (res) => {
+          foundBlog.tags.push(res);
+          res.blog.push(foundBlog);
+          // await this.TagEntityRepository.save(res);
+        });
+      });
+      // return await this.BlogEntityRepository.save(foundBlog);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

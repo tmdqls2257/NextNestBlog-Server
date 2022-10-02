@@ -33,11 +33,11 @@ export class BlogsController {
   async getBlog(@Param("id") id: string) {
     return await this.blogsService.getBlog(id);
   }
-
+  //@Body("tags") tags: string[]
   @ApiOperation({ summary: "블로그 글쓰기" })
   @Post()
-  async blogPost(@Body() body: BlogDTO) {
-    return await this.blogsService.blogPost(body);
+  async blogPost(@Body("blog") body: BlogDTO, @Body("tags") tags: string[]) {
+    return await this.blogsService.blogPost(body, tags);
   }
 
   @ApiOperation({ summary: "특정 블로그 수정" })
@@ -89,8 +89,11 @@ export class BlogsController {
   }
 
   @ApiOperation({ summary: "한 post의 tag를 가져옵니다." })
-  @Get("tags/:id")
-  async getTags(@Param("id") id: string) {
-    return await this.blogsService.getTags(id);
+  @Post("tags")
+  async JoinBlogTags(
+    @Body("tags") tagNames: string[],
+    @Body("blog") blog: BlogDTO
+  ) {
+    return await this.blogsService.JoinBlogTags(tagNames, blog);
   }
 }
