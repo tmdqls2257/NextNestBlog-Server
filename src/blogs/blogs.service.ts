@@ -19,7 +19,6 @@ export class BlogsService {
       const blogs = await this.BlogEntityRepository.find({
         relations: { tags: true },
       });
-      console.log(blogs);
 
       return blogs;
     } catch (error) {
@@ -89,7 +88,6 @@ export class BlogsService {
           tags: true,
         },
       });
-      console.log(foundBlog);
 
       tagNames.map(async (tagName) => {
         await this.TagEntityRepository.findOne({
@@ -99,7 +97,7 @@ export class BlogsService {
           },
         }).then((res) => {
           foundBlog.tags.push(res);
-          console.log("res", res);
+          // console.log("res", res);
         });
       });
       return await this.BlogEntityRepository.save(foundBlog);

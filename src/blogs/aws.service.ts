@@ -33,9 +33,7 @@ export class AwsService {
       const convertImage = await sharp(file.buffer).webp();
       const convertImageBuffer = await convertImage.toBuffer();
       const fileName = file.originalname.split(".")[0];
-      // const imageBuffer = await image.toBuffer();
-      console.log(convertImage);
-      console.log(convertImageBuffer);
+
       const key = `${folder}/${Date.now()}_${path.basename(
         fileName
       )}.webp`.replace(/ /g, "");
