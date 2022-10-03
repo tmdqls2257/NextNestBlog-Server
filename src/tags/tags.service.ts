@@ -1,6 +1,7 @@
 import { BadRequestException, Body, Injectable, Param } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+import { TagDto } from "./dto/tag.dto";
 import { TagEntity } from "./tags.entity";
 
 @Injectable()
@@ -12,24 +13,26 @@ export class TagsService {
 
   async getTags() {
     try {
-      const tags = await this.TagEntityRepository.find();
+      const tags = await this.TagEntityRepository.find({
+        relations: { blog: true },
+      });
       return tags;
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async postTags(names: string[]) {
-    names.map(async (name) => {
+  async postTags(tags: TagDto[]) {
+    tags.map(async (tag) => {
       const IsTag = await this.TagEntityRepository.findOne({
         where: {
-          name,
+          name: tag.name,
         },
       });
 
       !IsTag &&
         (await this.TagEntityRepository.save({
-          name,
+          name: tag.name,
         }));
     });
 

@@ -38,7 +38,7 @@ export class BlogsService {
     }
   }
 
-  async blogPost(BlogEntity: BlogDTO, tags: string[]) {
+  async blogPost(BlogEntity: BlogDTO) {
     const { title, contents, description, imageUrl } = BlogEntity;
     const newBlog = await this.BlogEntityRepository.save({
       title,
@@ -46,23 +46,6 @@ export class BlogsService {
       description,
       imageUrl,
     });
-
-    // if (tags) {
-    //   tags.map(async (name) => {
-    //     await this.TagEntityRepository.findOne({
-    //       where: {
-    //         name,
-    //       },
-    //       relations: {
-    //         blog: true,
-    //       },
-    //     }).then(async (res) => {
-    //       if (!res) {
-    //         await this.TagEntityRepository
-    //       }
-    //     });
-    //   });
-    // }
 
     return newBlog;
   }
@@ -106,7 +89,7 @@ export class BlogsService {
           tags: true,
         },
       });
-      console.log("foundBlog", foundBlog);
+      console.log(foundBlog);
 
       tagNames.map(async (tagName) => {
         await this.TagEntityRepository.findOne({
@@ -114,13 +97,12 @@ export class BlogsService {
           relations: {
             blog: true,
           },
-        }).then(async (res) => {
+        }).then((res) => {
           foundBlog.tags.push(res);
-          res.blog.push(foundBlog);
-          // await this.TagEntityRepository.save(res);
+          console.log("res", res);
         });
       });
-      // return await this.BlogEntityRepository.save(foundBlog);
+      return await this.BlogEntityRepository.save(foundBlog);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

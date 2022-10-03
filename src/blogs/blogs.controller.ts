@@ -36,8 +36,8 @@ export class BlogsController {
   //@Body("tags") tags: string[]
   @ApiOperation({ summary: "블로그 글쓰기" })
   @Post()
-  async blogPost(@Body("blog") body: BlogDTO, @Body("tags") tags: string[]) {
-    return await this.blogsService.blogPost(body, tags);
+  async blogPost(@Body() body: BlogDTO) {
+    return await this.blogsService.blogPost(body);
   }
 
   @ApiOperation({ summary: "특정 블로그 수정" })
