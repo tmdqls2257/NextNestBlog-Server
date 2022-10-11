@@ -17,8 +17,8 @@ export class TagsController {
   // }
 
   @Post()
-  async postTags(@Body() name: TagDto[]) {
-    return this.TagsService.postTags(name);
+  async postTags(@Body() tags: TagDto[]) {
+    return this.TagsService.postTags(tags);
   }
 
   @Delete(":id")
